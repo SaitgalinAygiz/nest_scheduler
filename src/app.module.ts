@@ -5,11 +5,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { configModule } from './configure.root';
 import { TokenModule } from './token/token.module';
 import { MailModule } from './mail/mail.module';
+import {GroupModule} from "./group/group.module";
+import { StudentModule } from './students/student.module';
 
 @Module({
   imports: [
     UserModule,
     AuthModule,
+    GroupModule,
     configModule,
 
     MongooseModule.forRoot(
@@ -20,7 +23,8 @@ import { MailModule } from './mail/mail.module';
       }
     ),
     TokenModule,
-    MailModule
+    MailModule,
+    StudentModule
   ],
 })
 export class AppModule {}
