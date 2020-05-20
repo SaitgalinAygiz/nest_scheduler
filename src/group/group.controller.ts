@@ -1,5 +1,5 @@
 import {ApiTags} from "@nestjs/swagger";
-import {Body, Controller, Post, ValidationPipe} from "@nestjs/common";
+import {Body, Controller, Delete, Param, Post, ValidationPipe} from "@nestjs/common";
 import {CreateGroupDto} from "./dto/create-group.dto";
 import {GroupService} from "./group.service";
 import {FindGroupDto} from "./dto/find-group.dto";
@@ -13,7 +13,7 @@ export class GroupController {
     }
 
     @Post("/create")
-    async create(@Body(new ValidationPipe()) createGroupDto: CreateGroupDto) {
+    async create(@Body(new ValidationPipe()) createGroupDto: CreateGroupDto): Promise<IGroup> {
         return await this.groupService.create(createGroupDto);
     }
 
@@ -25,5 +25,10 @@ export class GroupController {
     @Post("/all")
     async getAll(): Promise<IGroup[]> {
         return this.groupService.all();
+    }
+
+    @Delete(':name')
+    async delete(@Param('name') name: string) {
+        return this.groupService.delete(name)
     }
 }

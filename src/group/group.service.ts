@@ -1,12 +1,13 @@
 import {Injectable} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
 import * as mongoose from "mongoose";
-import {Model} from "mongoose";
+import {Model, NativeError} from "mongoose";
 import {IGroup} from "./group.interface";
 import * as _ from "lodash";
 import {CreateGroupDto} from "./dto/create-group.dto";
 import {FindGroupDto} from "./dto/find-group.dto";
 import {IStudent} from "../students/student.interface";
+import {GroupStatusEnum} from "./enums/group-status.enum";
 
 @Injectable()
 export class GroupService {
@@ -21,7 +22,11 @@ export class GroupService {
     ) {}
 
     async create(createGroupDto: CreateGroupDto): Promise<IGroup> {
-        const createdGroup = new this.groupModel(_.assignIn(createGroupDto))
+        const createdGroup = new this.groupModel()
+        createdGroup.name = createGroupDto.name
+        createdGroup.students = []
+        createdGroup.status = GroupStatusEnum.active
+
         return await createdGroup.save()
     }
 
@@ -29,8 +34,19 @@ export class GroupService {
         return this.groupModel.findById(findGroupDto.id);
     }
 
-    async delete(_id: string) {
-        return this.groupModel.deleteOne({_id});
+    // TODO: пиздцкц
+    async delete(name: string) {
+        const studentModel = this.studentModel;
+        await this.groupModel.findOne({'name': name})
+            .exec(async function (err: NativeError, group: IGroup) {
+                for (const student of group.students) {
+                    await studentModel
+                        .findOneAndDelete({'name': student})
+                        .exec();
+                }
+            });
+
+        return this.groupModel.deleteOne({'name': name}).exec();
     }
 
     async all(): Promise<IGroup[]> {

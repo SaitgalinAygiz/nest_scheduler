@@ -1,11 +1,11 @@
 import {InjectModel} from "@nestjs/mongoose";
 import {IStudent} from "./student.interface";
 import {Injectable} from "@nestjs/common";
-import {Model, NativeError, Schema} from "mongoose";
+import {Model, NativeError} from "mongoose";
 import * as _ from "lodash";
 import {CreateStudentDto} from "./dto/create-student.dto";
 import {IGroup} from "../group/group.interface";
-import {throwError} from "rxjs";
+
 @Injectable()
 export class StudentService {
 
@@ -48,8 +48,10 @@ export class StudentService {
 
         await this.groupModel.findOne({'name' : studentGroup})
             .exec(async function (err: NativeError, group: IGroup){
-                group.students.filter(student => student != studentName)
-                await group.save()
+                group.students = group.students.filter(student => {
+                    return student.toString() !== studentName.toString()
+                })
+                return await group.save()
             })
     }
 
