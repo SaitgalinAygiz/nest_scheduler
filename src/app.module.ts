@@ -18,7 +18,7 @@ import {ConsultationModule} from "./consultation/consultation.module";
     configModule,
 
     MongooseModule.forRoot(
-      process.env.MONGODB_WRITE_CONNECTION_STRING,
+      'mongodb+srv://saitgalin:M6uJ3ZiPm5By3sN@cluster0-mmftm.azure.mongodb.net/test?retryWrites=true&w=majority',
       {
         useNewUrlParser: true,
         useUnifiedTopology: true
