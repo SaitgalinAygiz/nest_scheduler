@@ -8,6 +8,7 @@ import { MailModule } from './mail/mail.module';
 import {GroupModule} from "./group/group.module";
 import { StudentModule } from './students/student.module';
 import {TeacherModule} from "./teacher/teacher.module";
+import {ConsultationModule} from "./consultation/consultation.module";
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import {TeacherModule} from "./teacher/teacher.module";
     TokenModule,
     MailModule,
     StudentModule,
-      TeacherModule
+      TeacherModule,
+      ConsultationModule
   ],
 })
 export class AppModule {}

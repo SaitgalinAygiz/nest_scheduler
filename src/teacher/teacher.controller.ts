@@ -1,8 +1,9 @@
-import {ApiBody, ApiConsumes, ApiQuery, ApiTags} from "@nestjs/swagger";
+import {ApiBody, ApiConsumes, ApiTags} from "@nestjs/swagger";
 import {
     Body,
     Controller,
-    Delete, Get,
+    Delete,
+    Get,
     Param,
     Post,
     Res,
@@ -11,11 +12,13 @@ import {
     ValidationPipe
 } from "@nestjs/common";
 import {TeacherService} from "./teacher.service";
-import {CreateStudentDto} from "../students/dto/create-student.dto";
 import {ITeacher} from "./teacher.interface";
 import {CreateTeacherDto} from "./dto/create-teacher.dto";
 import {FileInterceptor} from "@nestjs/platform-express"
 import {UploadFileDto} from "./dto/upload-file.dto";
+import {FindStudentDto} from "../students/dto/find-student.dto";
+import {IStudent} from "../students/student.interface";
+import {FindTeacherDto} from "./dto/find-teacher.dto";
 
 @ApiTags('teacher')
 @Controller('teacher')
@@ -42,14 +45,23 @@ export class TeacherController {
         return await this.teacherService.uploadFile(file, teacher)
     }
 
+    @Post("/findById")
+    async findById(@Body(new ValidationPipe()) findTeacherDto: FindTeacherDto): Promise<ITeacher> {
+        return await this.teacherService.findById(findTeacherDto);
+    }
+
     @Get(':imgpath')
     seeUploadedFile(@Param('imgpath') image: string, @Res() res) {
-        console.log(image.toString())
         return res.sendFile(image, {root: 'upload'})
     }
 
     @Delete(':id')
     async delete(@Param('id') id: string) {
         return this.teacherService.delete(id)
+    }
+
+    @Post("/all")
+    async getAll(): Promise<ITeacher[]> {
+        return this.teacherService.all();
     }
 }

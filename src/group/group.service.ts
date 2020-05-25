@@ -1,9 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
-import * as mongoose from "mongoose";
 import {Model, NativeError} from "mongoose";
 import {IGroup} from "./group.interface";
-import * as _ from "lodash";
 import {CreateGroupDto} from "./dto/create-group.dto";
 import {FindGroupDto} from "./dto/find-group.dto";
 import {IStudent} from "../students/student.interface";

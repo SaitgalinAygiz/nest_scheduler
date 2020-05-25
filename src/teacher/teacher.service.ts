@@ -3,9 +3,7 @@ import {InjectModel} from "@nestjs/mongoose";
 import {Model, NativeError} from "mongoose";
 import {ITeacher} from "./teacher.interface";
 import {CreateTeacherDto} from "./dto/create-teacher.dto";
-import * as _ from "lodash";
-import {IGroup} from "../group/group.interface";
-import {UploadFileDto} from "./dto/upload-file.dto";
+import {FindTeacherDto} from "./dto/find-teacher.dto";
 
 @Injectable()
 export class TeacherService {
@@ -35,5 +33,13 @@ export class TeacherService {
             teacher.picture = file.filename
             return await teacher.save()
         })
+    }
+
+    async all() {
+        return this.teacherModel.find();
+    }
+
+    async findById(findTeacherDto: FindTeacherDto) {
+        return this.teacherModel.findById(findTeacherDto.id);
     }
 }

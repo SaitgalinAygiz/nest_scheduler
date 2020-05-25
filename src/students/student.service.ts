@@ -5,6 +5,7 @@ import {Model, NativeError} from "mongoose";
 import * as _ from "lodash";
 import {CreateStudentDto} from "./dto/create-student.dto";
 import {IGroup} from "../group/group.interface";
+import {FindStudentDto} from "./dto/find-student.dto";
 
 @Injectable()
 export class StudentService {
@@ -55,4 +56,7 @@ export class StudentService {
             })
     }
 
+    async findById(findStudentDto: FindStudentDto) {
+        return this.studentModel.findById(findStudentDto.id);
+    }
 }
