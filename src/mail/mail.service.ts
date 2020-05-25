@@ -10,8 +10,8 @@ export class MailService {
 
   constructor(private readonly configService: ConfigService) {
     this.mg = Mailgun({
-      apiKey: this.configService.get<string>('MAILGUN_API_KEY'),
-      domain: this.configService.get<string>('MAILGUN_API_DOMAIN')
+      apiKey: 'a4a49be01282bd9f407705275b5756b9-915161b7-4ad5a7c7',
+      domain: 'https://api.mailgun.net/v3/sandbox252f33f8acb743f185fc275bcf888803.mailgun.org'
     })
   }
 
