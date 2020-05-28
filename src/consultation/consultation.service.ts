@@ -1,9 +1,8 @@
 import {Injectable} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
-import {Model} from "mongoose";
+import {Model, NativeError} from "mongoose";
 import {IConsultation} from "./consultation.interface";
 import {CreateConsultationDto} from "./dto/create-consultation.dto";
-import * as _ from "lodash";
 
 @Injectable()
 export class ConsultationService {
@@ -29,5 +28,23 @@ export class ConsultationService {
 
     async all(): Promise<IConsultation[]> {
         return this.consultationModel.find();
+    }
+
+    //pizdec
+    async findConsultationsByName(name: string): Promise<IConsultation[]> {
+        const consultationModel = this.consultationModel;
+        await this.consultationModel.find({'teacher': name})
+            .exec(async function (err: NativeError, consultations: IConsultation[]) {
+                if (consultations.length !== 0) {
+                    return consultations;
+                }
+                await consultationModel.find({'students' : name})
+                    .exec(async function (err: NativeError, consultations: IConsultation[]) {
+                        if (consultations.length !== 0) {
+                            return consultations;
+                        }
+                    })
+            })
+        return null;
     }
 }
