@@ -32,19 +32,17 @@ export class ConsultationService {
 
     //pizdec
     async findConsultationsByName(name: string): Promise<IConsultation[]> {
-        const consultationModel = this.consultationModel;
-        await this.consultationModel.find({'teacher': name})
-            .exec(async function (err: NativeError, consultations: IConsultation[]) {
-                if (consultations.length !== 0) {
-                    return consultations;
-                }
-                await consultationModel.find({'students' : name})
-                    .exec(async function (err: NativeError, consultations: IConsultation[]) {
-                        if (consultations.length !== 0) {
-                            return consultations;
-                        }
-                    })
-            })
-        return null;
+        let consultations = await this.consultationModel
+            .find({'teacher': name})
+            .exec()
+        if (consultations !== undefined && consultations.length !== 0) {
+            return consultations;
+        }
+
+        consultations = await this.consultationModel
+            .find({'students': name})
+            .exec()
+
+        return consultations;
     }
 }
