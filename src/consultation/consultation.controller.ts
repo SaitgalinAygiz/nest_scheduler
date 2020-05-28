@@ -19,4 +19,9 @@ export class ConsultationController {
     async create(@Body(new ValidationPipe()) createConsultationDto: CreateConsultationDto): Promise<IConsultation> {
         return await this.consultationService.create(createConsultationDto);
     }
+
+    @Post("/all")
+    async getAll(): Promise<IConsultation[]> {
+        return this.consultationService.all();
+    }
 }

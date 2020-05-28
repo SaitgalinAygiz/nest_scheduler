@@ -20,4 +20,8 @@ export class ConsultationService {
 
         return await createdConsultation.save()
     }
+
+    async all(): Promise<IConsultation[]> {
+        return this.consultationModel.find();
+    }
 }
