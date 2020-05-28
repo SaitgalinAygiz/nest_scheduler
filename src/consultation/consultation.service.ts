@@ -16,7 +16,13 @@ export class ConsultationService {
     }
 
     async create(createConsultationDto: CreateConsultationDto) {
-        const createdConsultation = new this.consultationModel(_.assignIn(createConsultationDto))
+        let createdConsultation = new this.consultationModel()
+        createdConsultation.name = createConsultationDto.name
+        createdConsultation.time = new Date(createConsultationDto.time)
+        createdConsultation.consultationType = createConsultationDto.consultationType
+        createdConsultation.description = createConsultationDto.description
+        createdConsultation.students = createConsultationDto.students
+        createdConsultation.teacher = createConsultationDto.teacher
 
         return await createdConsultation.save()
     }

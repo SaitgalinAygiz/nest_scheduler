@@ -1,5 +1,5 @@
 import {ApiProperty} from "@nestjs/swagger";
-import {IsArray, IsDate, IsNotEmpty, IsString} from "class-validator";
+import {IsArray, IsDate, IsNotEmpty, IsNumber, IsString} from "class-validator";
 
 export class CreateConsultationDto {
 
@@ -26,6 +26,6 @@ export class CreateConsultationDto {
     teacher: string
 
     @ApiProperty()
-    @IsDate()
-    time: Date
+    @IsNumber()
+    time: number
 }
