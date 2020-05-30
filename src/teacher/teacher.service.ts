@@ -18,6 +18,7 @@ export class TeacherService {
         const createdTeacher = new this.teacherModel()
         createdTeacher.name = createTeacherDto.name
         createdTeacher.picture = null
+        createdTeacher.phoneNumber = createTeacherDto.phoneNumber
 
         return await createdTeacher.save();
     }
@@ -41,5 +42,13 @@ export class TeacherService {
 
     async findById(findTeacherDto: FindTeacherDto) {
         return this.teacherModel.findById(findTeacherDto.id);
+    }
+
+    async findByName(name: string) {
+        return this.teacherModel.findOne({'name': name}).exec();
+    }
+
+    async findByPhoneNumber(number: string) {
+        return this.teacherModel.findOne({'phoneNumber': number}).exec();
     }
 }

@@ -64,4 +64,9 @@ export class TeacherController {
     async getAll(): Promise<ITeacher[]> {
         return this.teacherService.all();
     }
+
+    @Post("/findByPhoneNumber")
+    async findByPhoneNumber(@Body(new ValidationPipe()) findStudentDto: FindStudentDto): Promise<ITeacher> {
+        return await this.teacherService.findByPhoneNumber(findStudentDto.id);
+    }
 }

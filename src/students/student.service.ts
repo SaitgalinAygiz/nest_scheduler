@@ -59,4 +59,12 @@ export class StudentService {
     async findById(findStudentDto: FindStudentDto) {
         return this.studentModel.findById(findStudentDto.id);
     }
+
+    async findByName(name: string) {
+        return this.studentModel.findOne({'name': name}).exec();
+    }
+
+    async findByPhoneNumber(number: string) {
+        return this.studentModel.findOne({'phoneNumber': number}).exec();
+    }
 }

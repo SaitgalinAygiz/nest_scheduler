@@ -45,4 +45,5 @@ export class ConsultationService {
 
         return consultations;
     }
+
 }

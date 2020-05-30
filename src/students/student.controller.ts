@@ -24,6 +24,11 @@ export class StudentController {
         return await this.studentService.findById(findStudentDto);
     }
 
+    @Post("/findByPhoneNumber")
+    async findByPhoneNumber(@Body(new ValidationPipe()) findStudentDto: FindStudentDto): Promise<IStudent> {
+        return await this.studentService.findByPhoneNumber(findStudentDto.id);
+    }
+
     @Post("/all")
     async getAll(): Promise<IStudent[]> {
         return this.studentService.all();
