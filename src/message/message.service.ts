@@ -13,7 +13,6 @@ import MessagingPayload = admin.messaging.MessagingPayload;
 
 @Injectable()
 export class MessageService {
-    private readonly logger = new Logger(MessageService.name);
     private readonly admin = null;
 
     constructor(
@@ -66,24 +65,23 @@ export class MessageService {
         )
 
         for (const consultation of comingConsultations) {
-            Logger.debug("Has one consultation")
             let message = "У Вас через неделю состоится " + consultation.consultationType + " " + consultation.name
             const teacher: ITeacher = await this.teacherService
                 .findByName(consultation.teacher)
             if (teacher.authToken !== null && teacher.authToken !== undefined) {
-                await this.sendMessageToUser(teacher.authToken, message)
+                await MessageService.sendMessageToUser(teacher.authToken, message, this.admin)
             }
 
             for (const student of consultation.students) {
                 const studentModel: IStudent = await this.studentService.findByName(student)
                 if (studentModel.authToken !== null && studentModel.authToken !== undefined) {
-                    await this.sendMessageToUser(studentModel.authToken, message)
+                    await MessageService.sendMessageToUser(studentModel.authToken, message, this.admin)
                 }
             }
         }
     }
 
-    async sendMessageToUser(registrationToken: string, message: string) {
+    static async sendMessageToUser(registrationToken: string, message: string, admin) {
 
         const messageNotification: MessagingPayload = {
             notification: {
@@ -92,7 +90,7 @@ export class MessageService {
             }
         };
 
-        Logger.debug(await this.admin.messaging()
-            .sendToDevice(registrationToken, messageNotification))
+        return await admin.messaging()
+            .sendToDevice(registrationToken, messageNotification)
     }
 }
