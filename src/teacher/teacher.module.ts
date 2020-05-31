@@ -4,6 +4,7 @@ import {TeacherSchema} from "./schemas/teacher.schema";
 import {TeacherService} from "./teacher.service";
 import {TeacherController} from "./teacher.controller";
 import {MulterModule} from "@nestjs/platform-express";
+import {GroupSchema} from "../group/schemas/group.schema";
 
 @Module({
     imports: [MongooseModule.forFeature([
@@ -19,7 +20,11 @@ import {MulterModule} from "@nestjs/platform-express";
         })
     ],
     providers: [TeacherService],
-    exports: [TeacherService],
+    exports: [TeacherService, MongooseModule.forFeature([
+        {
+            name: 'Group', schema: GroupSchema
+        }
+    ])],
     controllers: [TeacherController]
 })
 export class TeacherModule {

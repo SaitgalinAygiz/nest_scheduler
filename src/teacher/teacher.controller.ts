@@ -19,6 +19,7 @@ import {UploadFileDto} from "./dto/upload-file.dto";
 import {FindStudentDto} from "../students/dto/find-student.dto";
 import {IStudent} from "../students/student.interface";
 import {FindTeacherDto} from "./dto/find-teacher.dto";
+import {SetTokenDto} from "./dto/set-token.dto";
 
 @ApiTags('teacher')
 @Controller('teacher')
@@ -68,5 +69,10 @@ export class TeacherController {
     @Post("/findByPhoneNumber")
     async findByPhoneNumber(@Body(new ValidationPipe()) findStudentDto: FindStudentDto): Promise<ITeacher> {
         return await this.teacherService.findByPhoneNumber(findStudentDto.id);
+    }
+
+    @Post("/setAuthToken")
+    async setAuthToken(@Body(new ValidationPipe()) setTokenDto: SetTokenDto) {
+        return await this.teacherService.setAuthToken(setTokenDto)
     }
 }

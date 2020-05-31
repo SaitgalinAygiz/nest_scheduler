@@ -4,6 +4,7 @@ import {StudentSchema} from "./schemas/student.schema";
 import {StudentService} from "./student.service";
 import {StudentController} from "./student.controller";
 import {GroupModule} from "../group/group.module";
+import {TeacherModule} from "../teacher/teacher.module";
 
 @Module({
     imports: [MongooseModule.forFeature([
@@ -11,7 +12,8 @@ import {GroupModule} from "../group/group.module";
             name: 'Student', schema: StudentSchema
         }
     ]),
-        GroupModule
+        GroupModule,
+        TeacherModule
     ],
     providers: [StudentService],
     exports: [

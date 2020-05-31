@@ -6,6 +6,9 @@ import * as _ from "lodash";
 import {CreateStudentDto} from "./dto/create-student.dto";
 import {IGroup} from "../group/group.interface";
 import {FindStudentDto} from "./dto/find-student.dto";
+import {SetTokenDto} from "../teacher/dto/set-token.dto";
+import {ITeacher} from "../teacher/teacher.interface";
+import {TeacherService} from "../teacher/teacher.service";
 
 @Injectable()
 export class StudentService {
@@ -14,7 +17,10 @@ export class StudentService {
         @InjectModel('Student')
         private readonly studentModel: Model<IStudent>,
         @InjectModel('Group')
-        private readonly groupModel: Model<IGroup>
+        private readonly groupModel: Model<IGroup>,
+        private readonly teacherService: TeacherService,
+        @InjectModel('Teacher')
+        private readonly teacherModel: Model<ITeacher>
     ) {
     }
 
@@ -66,5 +72,19 @@ export class StudentService {
 
     async findByPhoneNumber(number: string) {
         return this.studentModel.findOne({'phoneNumber': number}).exec();
+    }
+
+    async setAuthToken(setTokenDto: SetTokenDto) {
+        let student: IStudent = await this.findByName(setTokenDto.name);
+        if (student === null) {
+            let teacher: ITeacher = await this.teacherService.findByName(setTokenDto.name)
+            if (teacher !== null) {
+                teacher.authToken = setTokenDto.authToken
+                return await teacher.save()
+            }
+        } else {
+            student.authToken = setTokenDto.authToken
+            return await student.save()
+        }
     }
 }

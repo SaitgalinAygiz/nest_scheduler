@@ -6,6 +6,7 @@ import {IStudent} from "./student.interface";
 import {FindGroupDto} from "../group/dto/find-group.dto";
 import {IGroup} from "../group/group.interface";
 import {FindStudentDto} from "./dto/find-student.dto";
+import {SetTokenDto} from "../teacher/dto/set-token.dto";
 
 @ApiTags('student')
 @Controller('student')
@@ -37,6 +38,11 @@ export class StudentController {
     @Delete(':id')
     async delete(@Param('id') id: string) {
         return this.studentService.delete(id)
+    }
+
+    @Post("/setAuthToken")
+    async setAuthToken(@Body(new ValidationPipe()) setTokenDto: SetTokenDto) {
+        return await this.studentService.setAuthToken(setTokenDto)
     }
 
 }

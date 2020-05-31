@@ -4,6 +4,7 @@ import {Model, NativeError} from "mongoose";
 import {ITeacher} from "./teacher.interface";
 import {CreateTeacherDto} from "./dto/create-teacher.dto";
 import {FindTeacherDto} from "./dto/find-teacher.dto";
+import {SetTokenDto} from "./dto/set-token.dto";
 
 @Injectable()
 export class TeacherService {
@@ -50,5 +51,13 @@ export class TeacherService {
 
     async findByPhoneNumber(number: string) {
         return this.teacherModel.findOne({'phoneNumber': number}).exec();
+    }
+
+    async setAuthToken(setTokenDto: SetTokenDto) {
+        return await this.teacherModel.findOne({'name': setTokenDto.name})
+            .exec(async function (err: NativeError, teacher: ITeacher){
+            teacher.authToken = setTokenDto.authToken
+            return await teacher.save()
+        })
     }
 }
