@@ -30,9 +30,9 @@ import {MessageService} from "./message/message.service";
         StudentModule,
         TeacherModule,
         ConsultationModule,
-        ScheduleModule.forRoot()
+        ScheduleModule.forRoot(),
     ],
-    providers: [MessageService]
+    providers: []
 })
 export class AppModule {
 }
