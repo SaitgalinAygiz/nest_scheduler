@@ -54,7 +54,7 @@ export class ConsultationService {
 
         const time = moment(createdConsultation.time)
 
-        const message = 'Вам назначили' + createdConsultation.name + time.day + " в " + time.hour + " : " +  time.minute
+        const message = 'Вам назначили ' + createdConsultation.name + ". Время: " + time.day + " в " + time.hour + " : " +  time.minute
 
         const teacher: ITeacher = await this.teacherService.findByName(createdConsultation.teacher)
             if (teacher.authToken !== null && teacher.authToken !== undefined) {
