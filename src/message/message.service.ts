@@ -85,7 +85,7 @@ export class MessageService {
 
         const messageNotification: MessagingPayload = {
             notification: {
-                title: 'УКРТБ',
+                title: 'УКРТБ Дистанционное Обучение',
                 body: message
             }
         };
