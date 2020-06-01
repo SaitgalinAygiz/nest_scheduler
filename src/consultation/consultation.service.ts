@@ -1,4 +1,4 @@
-import {Injectable} from "@nestjs/common";
+import {Injectable, Logger} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
 import {IConsultation} from "./consultation.interface";
@@ -13,25 +13,15 @@ import {StudentService} from "../students/student.service";
 
 @Injectable()
 export class ConsultationService {
+    private readonly admin
 
     constructor(
         @InjectModel('Consultation')
         private readonly consultationModel: Model<IConsultation>,
         private readonly teacherService: TeacherService,
         private readonly studentService: StudentService
-    ) {}
-
-    async create(createConsultationDto: CreateConsultationDto) {
-        let createdConsultation = new this.consultationModel()
-        createdConsultation.name = createConsultationDto.name
-        createdConsultation.time = new Date(createConsultationDto.time)
-        createdConsultation.consultationType = createConsultationDto.consultationType
-        createdConsultation.description = createConsultationDto.description
-        createdConsultation.students = createConsultationDto.students
-        createdConsultation.teacher = createConsultationDto.teacher
-
-        let admin = require("firebase-admin")
-
+    ) {
+        this.admin = require("firebase-admin");
         const serviceAccount = {
             "type": "service_account",
             "project_id": "schedular-app-9225f",
@@ -44,28 +34,38 @@ export class ConsultationService {
             "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
             "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-4uzct%40schedular-app-9225f.iam.gserviceaccount.com"
         };
-
-        admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount),
+        this.admin.initializeApp({
+            credential: this.admin.credential.cert(serviceAccount),
             databaseURL: "https://schedular-app-9225f.firebaseio.com"
         });
+    }
+
+    async create(createConsultationDto: CreateConsultationDto) {
+        let createdConsultation = new this.consultationModel()
+        createdConsultation.name = createConsultationDto.name
+        createdConsultation.time = new Date(createConsultationDto.time)
+        createdConsultation.consultationType = createConsultationDto.consultationType
+        createdConsultation.description = createConsultationDto.description
+        createdConsultation.students = createConsultationDto.students
+        createdConsultation.teacher = createConsultationDto.teacher
 
         const moment = extendMoment(Moment);
 
         const time = moment(createdConsultation.time)
 
         const message = 'Вам назначили ' + createdConsultation.name +
-            ". Время: " + time.day.toString() + " в " + time.hour.toString() + " : " +  time.minute.toString()
+            ". Дата: " + time.format('MM/DD/YYYY') + " в " + time.format('hh:mm')
+        Logger.debug(message)
 
         const teacher: ITeacher = await this.teacherService.findByName(createdConsultation.teacher)
             if (teacher.authToken !== null && teacher.authToken !== undefined) {
-                await MessageService.sendMessageToUser(teacher.authToken, message, admin)
+                await MessageService.sendMessageToUser(teacher.authToken, message, this.admin)
             }
 
             for (const student of createdConsultation.students) {
                 const studentModel: IStudent = await this.studentService.findByName(student)
                 if (studentModel.authToken !== null && studentModel.authToken !== undefined) {
-                    await MessageService.sendMessageToUser(studentModel.authToken, message, admin)
+                    await MessageService.sendMessageToUser(studentModel.authToken, message, this.admin)
                 }
             }
 
